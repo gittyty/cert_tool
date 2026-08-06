@@ -16,20 +16,19 @@ jobs:
       with:
         go-version: '1.21'
 
-    - name: Install Zig
+    - name: Install MinGW-w64 (Windows cross-compiler)
       run: |
-        wget https://ziglang.org/download/0.13.0/zig-linux-x86_64-0.13.0.tar.xz
-        tar -xf zig-linux-x86_64-0.13.0.tar.xz
-        echo "$(pwd)/zig-linux-x86_64-0.13.0/" >> $GITHUB_PATH
+        sudo apt-get update
+        sudo apt-get install -y gcc-mingw-w64-x86-64
 
-    - name: Tidy and download dependencies
+    - name: Download Go dependencies
       run: |
         go mod tidy
         go mod download
 
     - name: Build EXE
       run: |
-        export CC="zig cc" CGO_ENABLED=1 GOOS=windows GOARCH=amd64
+        export CC=x86_64-w64-mingw32-gcc CGO_ENABLED=1 GOOS=windows GOARCH=amd64
         go build -ldflags "-H windowsgui" -o cert-tool.exe .
 
     - name: Upload EXE
