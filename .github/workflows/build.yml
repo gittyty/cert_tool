@@ -22,6 +22,11 @@ jobs:
         tar -xf zig-linux-x86_64-0.13.0.tar.xz
         echo "$(pwd)/zig-linux-x86_64-0.13.0/" >> $GITHUB_PATH
 
+    - name: Tidy and download dependencies
+      run: |
+        go mod tidy
+        go mod download
+
     - name: Build EXE
       run: |
         export CC="zig cc" CGO_ENABLED=1 GOOS=windows GOARCH=amd64
